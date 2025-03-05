@@ -99,7 +99,7 @@ def generate_answer(question_id: int, db: Session = Depends(get_db)):
         messages=[
             {
                 "role": "user",
-                "content": f"{question.question_text}. Напиши кратко, не более 50 слов."
+                "content": f"{question.question_text}. Ответ пиши <= 50 слов. Пиши строго по теме."
 
             }
         ]
