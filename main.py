@@ -136,7 +136,11 @@ def get_questions(db: Session = Depends(get_db)):
         temp = {}
         temp["id"] = question.id
         temp["text"] = question.question_text
-        temp["answer"] = db.query(Answer).filter(Answer.question_id == question.id).first()
+        answer = db.query(Answer).filter(Answer.question_id == question.id).first()
+        if answer is not None:
+            temp["answer"] = answer.answer_text
+        else:
+            temp["answer"] = None
         response.append(temp)
     return response
 
