@@ -105,7 +105,6 @@ def generate_answer(question_id: int, db: Session = Depends(get_db)):
         ]
     )
     answer_text = response.choices[0].message.content
-    print(answer_text)
     create_answer(db, answer=AnswerCreate(answer_text=answer_text), question_id=question_id)
     return {"answer": answer_text}
 
@@ -127,6 +126,19 @@ def start_review(question_id: int, db: Session = Depends(get_db)):
             (question_id, interval), countdown=interval
         )
     return {"message": "Review scheduled"}
+
+
+@app.get("/get-questions")
+def get_questions(db: Session = Depends(get_db)):
+    questions = db.query(Question).all()
+    response = []
+    for question in questions:
+        temp = {}
+        temp["id"] = question.id
+        temp["text"] = question.question_text
+        temp["answer"] = db.query(Answer).filter(Answer.question_id == question.id).first()
+        response.append(temp)
+    return response
 
 
 load_dotenv()
